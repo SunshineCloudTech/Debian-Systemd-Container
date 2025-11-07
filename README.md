@@ -1,38 +1,69 @@
-# Fedora 43 Ansible Test Image
+# Debian Systemd 容器镜像
 
-[![Build](https://github.com/geerlingguy/docker-fedora43-ansible/actions/workflows/build.yml/badge.svg)](https://github.com/geerlingguy/docker-fedora43-ansible/actions/workflows/build.yml) [![Docker pulls](https://img.shields.io/docker/pulls/geerlingguy/docker-fedora43-ansible)](https://hub.docker.com/r/geerlingguy/docker-fedora43-ansible/)
+基于 Debian Bookworm 的 Docker 容器镜像，支持 systemd、Ansible 和 Ollama。
 
-Fedora 43 Docker container for Ansible playbook and role testing.
+## 镜像说明
 
-## Tags
+本镜像基于 Debian Bookworm 构建，包含以下主要组件：
 
-  - `latest`: Latest stable version of Ansible.
+- systemd：完整的 systemd 支持
+- Ansible：通过 pip 安装的最新版本
+- Ollama：用于运行大语言模型
+- Python3 和 pip
+- sudo、curl、wget 等常用工具
 
-The latest tag is a lightweight image for basic validation of Ansible playbooks.
+## 预配置用户（记得下载镜像后及时修改密码！！！）
 
-## How to Build
+镜像中预配置了以下用户：
 
-This image is built on Docker Hub automatically any time the upstream OS container is rebuilt, and any time a commit is made or merged to the `master` branch. But if you need to build the image on your own locally, do the following:
+- root：密码为 123456789
+- Administrator：密码为 123456789，具有 sudo 权限
+- matrix0523：密码为 123456789，具有 sudo 权限和 NOPASSWD 配置
+- ollama：系统用户，用于运行 Ollama 服务
 
-  1. [Install Docker](https://docs.docker.com/engine/installation/).
-  2. `cd` into this directory.
-  3. Run `docker build -t fedora43-ansible .`
+## 构建方法
 
-## How to Use
+1. 安装 Docker
+2. 进入本仓库目录
+3. 运行以下命令构建镜像：
 
-  1. [Install Docker](https://docs.docker.com/engine/installation/).
-  2. Pull this image from Docker Hub: `docker pull geerlingguy/docker-fedora43-ansible:latest` (or use the image you built earlier, e.g. `fedora43-ansible:latest`).
-  3. Run a container from the image: `docker run --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns=host geerlingguy/docker-fedora43-ansible:latest` (to test my Ansible roles, I add in a volume mounted from the current working directory with ``--volume=`pwd`:/etc/ansible/roles/role_under_test:ro``).
-  4. Use Ansible inside the container:
-    a. `docker exec --tty [container_id] env TERM=xterm ansible --version`
-    b. `docker exec --tty [container_id] env TERM=xterm ansible-playbook /path/to/ansible/playbook.yml --syntax-check`
+```
+docker build -t debian-systemd .
+```
 
-## Notes
+## 使用方法
 
-I use Docker to test my Ansible roles and playbooks on multiple OSes using CI tools like Jenkins and Travis. This container allows me to test roles and playbooks using Ansible running locally inside the container.
+1. 安装 Docker
+2. 构建或拉取镜像
+3. 运行容器：
 
-> **Important Note**: I use this image for testing in an isolated environment—not for production—and the settings and configuration used may not be suitable for a secure and performant production environment. Use on production servers/in the wild at your own risk!
+```
+docker run --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns=host debian-systemd:latest
+```
 
-## Author
+4. 进入容器：
 
-Created in 2024 by [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/).
+```
+docker exec -it [container_id] /bin/bash
+```
+
+5. 在容器内使用 Ansible：
+
+```
+docker exec --tty [container_id] env TERM=xterm ansible --version
+docker exec --tty [container_id] env TERM=xterm ansible-playbook /path/to/playbook.yml
+```
+
+6. 在容器内使用 Ollama：
+
+```
+docker exec --tty [container_id] ollama run llama2
+```
+
+## 注意事项
+
+本镜像包含预配置的用户和密码，仅用于测试和开发环境。请勿在生产环境中直接使用。如需在生产环境使用，请修改 Dockerfile 中的密码配置，并采取适当的安全措施。
+
+## 维护者
+
+SunshineCloudTech

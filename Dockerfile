@@ -18,6 +18,17 @@ RUN apt-get update && \
     rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
     rm -f /lib/systemd/system/basic.target.wants/*;\
     rm -f /lib/systemd/system/anaconda.target.wants/*;
+
+# Install pip and other requirements.
+RUN apt-get update \
+  && apt-get install -y \
+    python3-pip \
+    sudo xterm \
+    curl wget \
+    ca-certificates \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+# Setup System User and Permissions  
 RUN useradd -m "Administrator" -s /bin/bash && \
     echo "Administrator:123456789" | chpasswd && \
     echo "root:123456789" | chpasswd && \
@@ -37,16 +48,6 @@ RUN useradd -m "Administrator" -s /bin/bash && \
     mkdir -p /var/lib/ollama/models && \
     chown -R ollama:ollama /var/lib/ollama && \
     chmod -R 755 /var/lib/ollama
-# Install pip and other requirements.
-RUN apt-get update \
-  && apt-get install -y \
-    python3-pip \
-    sudo xterm \
-    curl wget \
-    ca-certificates \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
 # Install Ansible via Pip.
 RUN pip3 install --break-system-packages $pip_packages
 # Disable requiretty.

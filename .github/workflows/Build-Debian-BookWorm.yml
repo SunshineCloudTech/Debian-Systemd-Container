@@ -1,5 +1,5 @@
 ---
-name: Build
+name: Build Debian BookWorm
 
 on:
   workflow_dispatch:
@@ -19,14 +19,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3  
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Test building image.
-        run: docker build -t docker-ansible .
+        run: docker build -t bookworm-systemd -f Dockerfile.bookworm .
 
       - name: Run the built image.
         run: |
           docker run --name test-container -d --privileged \
             -v /sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns=host \
-            docker-ansible
+            bookworm-systemd
 
       - name: Verify Ansible is accessible in the built image.
         run: docker exec --tty test-container env TERM=xterm ansible --version
@@ -40,8 +49,30 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-qemu-action@v2
-      - uses: docker/setup-buildx-action@v2
+      - name: "Optimize Disk Space"
+        uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.0"
+        with:
+          operate_sudo: "True"
+          general_include: ".+"
+          docker_include: ".+"
+          docker_prune: "True"
+          docker_clean: "True"
+          apt_prune: "True"
+          apt_clean: "True"
+          homebrew_prune: "True"
+          homebrew_clean: "True"
+          npm_prune: "True"
+          npm_clean: "True"
+          os_swap: "True"
+
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3  
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Login to DockerHub
         uses: docker/login-action@v3

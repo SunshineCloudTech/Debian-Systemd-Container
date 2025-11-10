@@ -75,8 +75,9 @@ jobs:
           docker create -it -P --name $docker_tmp_name sunshinecloud007/systemd-container:debian-bookworm-temp bash
           echo "Committing container with metadata..."
           docker commit \
-            --change='USER matrix0523' \
-            --change='WORKDIR /home/matrix0523' \
+            --change='USER root' \
+            --change='WORKDIR /root' \
+            --change='VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]' \
             --change='ENTRYPOINT [ "/lib/systemd/systemd" ]' \
             $docker_tmp_name sunshinecloud007/systemd-container:debian-bookworm
           rm $docker_tmp_name.tar

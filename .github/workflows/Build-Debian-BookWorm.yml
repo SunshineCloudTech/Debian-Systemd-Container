@@ -87,4 +87,4 @@ jobs:
           file: Dockerfile.bookworm
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: sunshinecloud007/systemd-container:debian-bookworm
+          tags: sunshinecloud007/systemd-container:debian-bookworm-base

@@ -29,7 +29,7 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Test building image.
-        run: docker build -t focal-systemd -f Dockerfile.focal .
+        run: docker build -t focal-systemd -f ubuntu-focal/Dockerfile .
 
       - name: Run the built image.
         run: |
@@ -80,11 +80,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push image.
-        uses: docker/build-push-action@v6
+      # - name: Build and push image.
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: ./
+      #     file: ubuntu-focal/Dockerfile
+      #     platforms: linux/amd64,linux/arm64
+      #     push: true
+      #     tags: sunshinecloud007/systemd-container:ubuntu-focal-base
+
+      - name: Build and push Dev Container image
+        uses: devcontainers/ci@v0.3
         with:
-          context: ./
-          file: Dockerfile.focal
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: sunshinecloud007/systemd-container:ubuntu-focal-base
+          imageName: sunshinecloud007/systemd-container
+          imageTag: ubuntu-focal-base
+          subFolder: ubuntu-focal
+          platform: linux/amd64,linux/arm64
+          noCache: true
+          push: always

@@ -128,7 +128,7 @@
         "./features/machine-learning-packages": "latest", // 机器学习包集合
         "./features/setup-user": "latest",       // 用户环境配置
         "./features/patch-python": {},           // Python 环境修补
-        "./features/patch-conda": {},            // Conda 环境修补
+        // "./features/patch-conda": {},            // Conda 环境修补（已注释）
 		"./features/micromamba": {
 			"allowReinstall": true,
 			"autoActivate": true,

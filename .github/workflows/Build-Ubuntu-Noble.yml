@@ -29,7 +29,7 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Test building image.
-        run: docker build -t noble-systemd -f ubuntu-noble/Dockerfile .
+        run: docker build -t noble-systemd -f ubuntu-noble/.devcontainer/Dockerfile .
 
       - name: Run the built image.
         run: |

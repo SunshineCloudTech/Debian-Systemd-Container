@@ -29,7 +29,7 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Test building image.
-        run: docker build -t bookworm-systemd -f debian-bookworm/Dockerfile .
+        run: docker build -t bookworm-systemd -f debian-bookworm/.devcontainer/Dockerfile .
 
       - name: Run the built image.
         run: |

@@ -72,11 +72,11 @@
             "version": "3.10"                    // Python 版本
         },
         
-        // Conda 包管理器：Python 科学计算环境管理
-        "ghcr.io/devcontainers/features/conda:1": {
-            "addCondaForge": true,                // 添加 conda-forge 频道
-            "version": "latest"                   // Conda 最新版本
-        },
+        // Conda 包管理器：Python 科学计算环境管理（已注释）
+        // "ghcr.io/devcontainers/features/conda:1": {
+        //     "addCondaForge": true,                // 添加 conda-forge 频道
+        //     "version": "latest"                   // Conda 最新版本
+        // },
                         
         // SSH 服务器：远程访问支持
         "ghcr.io/devcontainers/features/sshd:1": {

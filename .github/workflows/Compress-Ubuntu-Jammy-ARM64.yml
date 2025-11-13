@@ -1,9 +1,9 @@
 ---
-name: Compress Debian Trixie Image
+name: Compress Ubuntu Jammy ARM64 Image
 
 on:
   workflow_run:
-    workflows: ["Build Debian Trixie"]
+    workflows: ["Build Ubuntu Jammy"]
     types:
       - completed
     branches:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   compress:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm64
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     
     steps:
@@ -51,16 +51,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Pull Base Image
+      - name: Pull Base Image (ARM64)
         run: |
-          docker pull sunshinecloud007/systemd-container:debian-trixie-base
-          docker images sunshinecloud007/systemd-container:debian-trixie-base
+          docker pull sunshinecloud007/systemd-container:ubuntu-jammy-base
+          docker images sunshinecloud007/systemd-container:ubuntu-jammy-base
           df -h
 
-      - name: Compress Docker Image
+      - name: Compress Docker Image (ARM64)
         run: |
-          export src_image_name=sunshinecloud007/systemd-container:debian-trixie-base
-          export docker_tmp_name=temp-trixie
+          export src_image_name=sunshinecloud007/systemd-container:ubuntu-jammy-base
+          export docker_tmp_name=temp-jammy-arm64
           echo "Creating temporary container from image..."
           docker create -it -P --name $docker_tmp_name $src_image_name
           echo "Exporting container to tar..."
@@ -70,24 +70,24 @@ jobs:
           echo "Removing base image..."
           docker rmi $src_image_name
           echo "Importing tar to image..."
-          docker import $docker_tmp_name.tar sunshinecloud007/systemd-container:debian-trixie-temp
+          docker import $docker_tmp_name.tar sunshinecloud007/systemd-container:ubuntu-jammy-temp-arm64
           echo "Creating temporary container from imported image..."
-          docker create -it -P --name $docker_tmp_name sunshinecloud007/systemd-container:debian-trixie-temp bash
+          docker create -it -P --name $docker_tmp_name sunshinecloud007/systemd-container:ubuntu-jammy-temp-arm64 bash
           echo "Committing container with metadata..."
           docker commit \
             --change='USER root' \
             --change='WORKDIR /root' \
             --change='VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]' \
             --change='ENTRYPOINT [ "/lib/systemd/systemd" ]' \
-            $docker_tmp_name sunshinecloud007/systemd-container:debian-trixie
+            $docker_tmp_name sunshinecloud007/systemd-container:ubuntu-jammy-arm64
           rm $docker_tmp_name.tar
-          docker tag sunshinecloud007/systemd-container:debian-trixie sunshinecloud007/systemd-container:debian-trixie-latest
+          docker tag sunshinecloud007/systemd-container:ubuntu-jammy-arm64 sunshinecloud007/systemd-container:ubuntu-jammy-latest-arm64
           docker images sunshinecloud007/systemd-container
 
-      - name: Push Compressed Images
+      - name: Push Compressed Images (ARM64)
         run: |
-          docker push sunshinecloud007/systemd-container:debian-trixie
-          docker push sunshinecloud007/systemd-container:debian-trixie-latest
+          docker push sunshinecloud007/systemd-container:ubuntu-jammy-arm64
+          docker push sunshinecloud007/systemd-container:ubuntu-jammy-latest-arm64
 
       - name: Print Disk Usage
         run: |

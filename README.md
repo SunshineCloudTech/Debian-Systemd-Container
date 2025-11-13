@@ -8,14 +8,11 @@
 
 ### Debian 系列
 
-- Debian 10 Buster
 - Debian 11 Bullseye
 - Debian 12 Bookworm
-- Debian 13 Trixie
 
 ### Ubuntu LTS 系列
 
-- Ubuntu 18.04 Bionic Beaver
 - Ubuntu 20.04 Focal Fossa
 - Ubuntu 22.04 Jammy Jellyfish
 - Ubuntu 24.04 Noble Numbat
@@ -40,76 +37,130 @@
 - matrix0523 密码 123456789，sudo 权限，NOPASSWD
 - ollama 系统用户
 
+## 快速部署
+
+### 使用 Docker Compose（推荐）
+
+本仓库为每个镜像提供了 docker-compose 文件，方便快速部署：
+
+```bash
+# Debian 12 Bookworm
+docker-compose -f docker-compose.debian-bookworm.yml up -d
+
+# Debian 11 Bullseye
+docker-compose -f docker-compose.debian-bullseye.yml up -d
+
+# Ubuntu 24.04 Noble
+docker-compose -f docker-compose.ubuntu-noble.yml up -d
+
+# Ubuntu 22.04 Jammy
+docker-compose -f docker-compose.ubuntu-jammy.yml up -d
+
+# Ubuntu 20.04 Focal
+docker-compose -f docker-compose.ubuntu-focal.yml up -d
+```
+
+可用的 docker-compose 文件：
+
+- `docker-compose.debian-bookworm.yml` - Debian 12 Bookworm
+- `docker-compose.debian-bullseye.yml` - Debian 11 Bullseye
+- `docker-compose.ubuntu-noble.yml` - Ubuntu 24.04 Noble
+- `docker-compose.ubuntu-jammy.yml` - Ubuntu 22.04 Jammy
+- `docker-compose.ubuntu-focal.yml` - Ubuntu 20.04 Focal
+- `docker-compose.multi.yml` - 多容器示例（同时运行所有版本）
+
+### 多容器部署
+
+如需同时运行多个版本的容器进行测试或开发：
+
+```bash
+docker-compose -f docker-compose.multi.yml up -d
+```
+
+这将启动所有 5 个版本的容器，并通过不同的 SSH 端口访问：
+- Debian 12 Bookworm: 端口 2201
+- Debian 11 Bullseye: 端口 2202
+- Ubuntu 24.04 Noble: 端口 2203
+- Ubuntu 22.04 Jammy: 端口 2204
+- Ubuntu 20.04 Focal: 端口 2205
+
 ## 构建方法
 
-选择要构建的版本，使用对应的 Dockerfile：
+选择要构建的版本，使用对应文件夹中的 Dockerfile：
 
-```
-docker build -t debian-bookworm-systemd -f Dockerfile.bookworm .
-docker build -t ubuntu-noble-systemd -f Dockerfile.noble .
+```bash
+# Debian 12 Bookworm
+docker build -t debian-bookworm-systemd -f debian-bookworm/.devcontainer/Dockerfile .
+
+# Ubuntu 24.04 Noble
+docker build -t ubuntu-noble-systemd -f ubuntu-noble/.devcontainer/Dockerfile .
 ```
 
-可用的 Dockerfile：
+可用的 Dockerfile 位置：
 
-```
-Dockerfile.buster
-Dockerfile.bullseye
-Dockerfile.bookworm
-Dockerfile.trixie
-Dockerfile.bionic
-Dockerfile.focal
-Dockerfile.jammy
-Dockerfile.noble
-```
+- `debian-bookworm/.devcontainer/Dockerfile`
+- `debian-bullseye/.devcontainer/Dockerfile`
+- `ubuntu-noble/.devcontainer/Dockerfile`
+- `ubuntu-jammy/.devcontainer/Dockerfile`
+- `ubuntu-focal/.devcontainer/Dockerfile`
 
 ## 使用方法
 
 ### 从 Docker Hub 拉取镜像
 
-```
+```bash
+# AMD64 架构
 docker pull sunshinecloud007/systemd-container:debian-bookworm
 docker pull sunshinecloud007/systemd-container:ubuntu-noble
+
+# ARM64 架构
+docker pull sunshinecloud007/systemd-container:debian-bookworm-arm64
+docker pull sunshinecloud007/systemd-container:ubuntu-noble-arm64
 ```
 
 可用的镜像标签：
 
-```
-debian-buster
-debian-bullseye
-debian-bookworm
-debian-trixie
-ubuntu-bionic
-ubuntu-focal
-ubuntu-jammy
-ubuntu-noble
-```
+**AMD64 架构：**
+- `debian-bullseye`, `debian-bullseye-latest`
+- `debian-bookworm`, `debian-bookworm-latest`
+- `ubuntu-focal`, `ubuntu-focal-latest`
+- `ubuntu-jammy`, `ubuntu-jammy-latest`
+- `ubuntu-noble`, `ubuntu-noble-latest`
+
+**ARM64 架构：**
+- `debian-bullseye-arm64`, `debian-bullseye-latest-arm64`
+- `debian-bookworm-arm64`, `debian-bookworm-latest-arm64`
+- `ubuntu-focal-arm64`, `ubuntu-focal-latest-arm64`
+- `ubuntu-jammy-arm64`, `ubuntu-jammy-latest-arm64`
+- `ubuntu-noble-arm64`, `ubuntu-noble-latest-arm64`
 
 ### 运行容器
 
-```
+```bash
 docker run --detach --privileged \
   --volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
   --cgroupns=host \
+  --name my-systemd-container \
   sunshinecloud007/systemd-container:debian-bookworm
 ```
 
 ### 进入容器
 
-```
-docker exec -it [container_id] /bin/bash
+```bash
+docker exec -it my-systemd-container /bin/bash
 ```
 
 ### 使用 Ansible
 
-```
-docker exec --tty [container_id] env TERM=xterm ansible --version
-docker exec --tty [container_id] env TERM=xterm ansible-playbook /path/to/playbook.yml
+```bash
+docker exec --tty my-systemd-container env TERM=xterm ansible --version
+docker exec --tty my-systemd-container env TERM=xterm ansible-playbook /path/to/playbook.yml
 ```
 
 ### 使用 Ollama
 
-```
-docker exec --tty [container_id] ollama run llama2
+```bash
+docker exec --tty my-systemd-container ollama run llama2
 ```
 
 ## 自动化构建
@@ -120,6 +171,15 @@ docker exec --tty [container_id] ollama run llama2
 - 推送到 master 分支时自动构建
 - 支持手动触发构建
 - 多架构支持：linux/amd64 和 linux/arm64
+- 自动镜像压缩以减小体积
+
+### 构建流程
+
+1. **构建阶段**：使用 devcontainers/ci 构建多架构基础镜像（`-base` 标签）
+2. **压缩阶段**：
+   - AMD64：在 `ubuntu-latest` runner 上压缩
+   - ARM64：在 `ubuntu-24.04-arm64` runner 上压缩
+3. **发布**：推送至 Docker Hub
 
 ## 注意事项
 

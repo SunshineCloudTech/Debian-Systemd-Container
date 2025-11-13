@@ -1,0 +1,88 @@
+version: '3.8'
+
+# 多容器示例配置
+# 此文件展示如何同时运行多个 systemd 容器
+# 使用方法：docker-compose -f docker-compose.multi.yml up -d
+
+services:
+  # Debian 12 Bookworm
+  debian-bookworm:
+    image: sunshinecloud007/systemd-container:debian-bookworm
+    container_name: debian-bookworm-systemd
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroup: host
+    ports:
+      - "2201:22"
+    networks:
+      - systemd-net
+    hostname: debian-bookworm
+  
+  # Debian 11 Bullseye
+  debian-bullseye:
+    image: sunshinecloud007/systemd-container:debian-bullseye
+    container_name: debian-bullseye-systemd
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroup: host
+    ports:
+      - "2202:22"
+    networks:
+      - systemd-net
+    hostname: debian-bullseye
+  
+  # Ubuntu 24.04 Noble
+  ubuntu-noble:
+    image: sunshinecloud007/systemd-container:ubuntu-noble
+    container_name: ubuntu-noble-systemd
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroup: host
+    ports:
+      - "2203:22"
+    networks:
+      - systemd-net
+    hostname: ubuntu-noble
+  
+  # Ubuntu 22.04 Jammy
+  ubuntu-jammy:
+    image: sunshinecloud007/systemd-container:ubuntu-jammy
+    container_name: ubuntu-jammy-systemd
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroup: host
+    ports:
+      - "2204:22"
+    networks:
+      - systemd-net
+    hostname: ubuntu-jammy
+  
+  # Ubuntu 20.04 Focal
+  ubuntu-focal:
+    image: sunshinecloud007/systemd-container:ubuntu-focal
+    container_name: ubuntu-focal-systemd
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroup: host
+    ports:
+      - "2205:22"
+    networks:
+      - systemd-net
+    hostname: ubuntu-focal
+
+networks:
+  systemd-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

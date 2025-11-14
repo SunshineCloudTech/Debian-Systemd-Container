@@ -178,7 +178,7 @@ docker exec --tty my-systemd-container ollama run llama2
 1. **构建阶段**：使用 devcontainers/ci 构建多架构基础镜像（`-base` 标签）
 2. **压缩阶段**：
    - AMD64：在 `ubuntu-latest` runner 上压缩
-   - ARM64：在 `ubuntu-24.04-arm64` runner 上压缩
+   - ARM64：在 `ubuntu-24.04-arm` runner 上压缩
 3. **发布**：推送至 Docker Hub
 
 ## 注意事项

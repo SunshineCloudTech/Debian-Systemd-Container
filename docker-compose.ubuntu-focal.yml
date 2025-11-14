@@ -1,4 +1,10 @@
-version: '3.8'
+# Ubuntu 20.04 Focal Systemd Container
+# 
+# 使用方法：
+#   后台运行：docker compose -f docker-compose.ubuntu-focal.yml up -d
+#   查看日志：docker compose -f docker-compose.ubuntu-focal.yml logs -f
+#   停止容器：docker compose -f docker-compose.ubuntu-focal.yml down
+#   进入容器：docker exec -it ubuntu-focal-systemd /bin/bash
 
 services:
   ubuntu-focal-systemd:

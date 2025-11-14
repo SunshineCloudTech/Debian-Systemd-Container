@@ -64,7 +64,7 @@
         "ghcr.io/devcontainers/features/python:1": {
             "installPath": "/usr/local/python",   // Python 安装路径
             "installTools": true,                 // 安装开发工具（pip、setuptools）
-            "toolsToInstall": "pipx, poetry",                // 额外工具列表
+            "toolsToInstall": "pipx, uv",                // 额外工具列表
             "optimize": true,                     // 优化 Python 性能
             "enableShared": true,                 // 启用共享库
             "installJupyterlab": true,           // 安装 JupyterLab
@@ -112,6 +112,24 @@
             "version": "latest",                  // Docker 最新版本
             "dockerDashComposeVersion": "v2"      // Docker Compose v2
         },
+
+        // PowerShell：跨平台脚本和自动化支持
+        "ghcr.io/devcontainers/features/powershell:1": {
+            "version": "latest"                   // PowerShell 最新版本
+        },
+
+        // Go：Go 语言开发环境
+        "ghcr.io/devcontainers/features/go:1": {
+            "version": "latest",                  // Go 最新版本
+            "golangciLintVersion": "latest"       // golangci-lint 最新版本
+        },
+
+        // Rust：Rust 语言开发环境
+        "ghcr.io/devcontainers/features/rust:1": {
+            "version": "latest",                  // Rust 最新版本
+            "profile": "minimal",                 // Rustup 安装配置（最小化）
+            "components": "rust-analyzer,rust-src,rustfmt,clippy"  // Rust 组件
+        },
                 
         // NVIDIA CUDA：GPU 计算和机器学习支持（已注释）
         // "ghcr.io/devcontainers/features/nvidia-cuda:2": {
@@ -156,6 +174,9 @@
         "./features/patch-python",                          // Python 环境修补
         "./features/machine-learning-packages",             // 机器学习包
         "./features/micromamba",                           // Micromamba 包管理器
+        "ghcr.io/devcontainers/features/powershell",       // PowerShell
+        "ghcr.io/devcontainers/features/go",               // Go 语言
+        "ghcr.io/devcontainers/features/rust",             // Rust 语言
         "ghcr.io/devcontainers/features/sshd",             // SSH 服务器
         "ghcr.io/devcontainers/features/git-lfs",          // Git LFS
         "ghcr.io/devcontainers/features/github-cli",       // GitHub CLI

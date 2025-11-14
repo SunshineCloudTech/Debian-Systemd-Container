@@ -1,4 +1,10 @@
-version: '3.8'
+# Ubuntu 22.04 Jammy Systemd Container
+# 
+# 使用方法：
+#   后台运行：docker compose -f docker-compose.ubuntu-jammy.yml up -d
+#   查看日志：docker compose -f docker-compose.ubuntu-jammy.yml logs -f
+#   停止容器：docker compose -f docker-compose.ubuntu-jammy.yml down
+#   进入容器：docker exec -it ubuntu-jammy-systemd /bin/bash
 
 services:
   ubuntu-jammy-systemd:

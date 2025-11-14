@@ -1,8 +1,11 @@
-version: '3.8'
-
 # 多容器示例配置
 # 此文件展示如何同时运行多个 systemd 容器
-# 使用方法：docker-compose -f docker-compose.multi.yml up -d
+# 
+# 使用方法：
+#   后台运行：docker compose -f docker-compose.multi.yml up -d
+#   查看日志：docker compose -f docker-compose.multi.yml logs -f
+#   停止容器：docker compose -f docker-compose.multi.yml down
+#   进入容器：docker exec -it <container-name> /bin/bash
 
 services:
   # Debian 12 Bookworm

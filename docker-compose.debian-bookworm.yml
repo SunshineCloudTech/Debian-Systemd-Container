@@ -1,4 +1,10 @@
-version: '3.8'
+# Debian 12 Bookworm Systemd Container
+# 
+# 使用方法：
+#   后台运行：docker compose -f docker-compose.debian-bookworm.yml up -d
+#   查看日志：docker compose -f docker-compose.debian-bookworm.yml logs -f
+#   停止容器：docker compose -f docker-compose.debian-bookworm.yml down
+#   进入容器：docker exec -it debian-bookworm-systemd /bin/bash
 
 services:
   debian-bookworm-systemd:

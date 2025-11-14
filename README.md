@@ -41,23 +41,41 @@
 
 ### 使用 Docker Compose（推荐）
 
-本仓库为每个镜像提供了 docker-compose 文件，方便快速部署：
+本仓库为每个镜像提供了 docker-compose 文件，方便快速部署。
+
+**重要提示**：systemd 容器需要在后台运行，请使用 `-d` 参数。
 
 ```bash
-# Debian 12 Bookworm
-docker-compose -f docker-compose.debian-bookworm.yml up -d
+# Debian 12 Bookworm（后台运行）
+docker compose -f docker-compose.debian-bookworm.yml up -d
 
 # Debian 11 Bullseye
-docker-compose -f docker-compose.debian-bullseye.yml up -d
+docker compose -f docker-compose.debian-bullseye.yml up -d
 
 # Ubuntu 24.04 Noble
-docker-compose -f docker-compose.ubuntu-noble.yml up -d
+docker compose -f docker-compose.ubuntu-noble.yml up -d
 
 # Ubuntu 22.04 Jammy
-docker-compose -f docker-compose.ubuntu-jammy.yml up -d
+docker compose -f docker-compose.ubuntu-jammy.yml up -d
 
 # Ubuntu 20.04 Focal
-docker-compose -f docker-compose.ubuntu-focal.yml up -d
+docker compose -f docker-compose.ubuntu-focal.yml up -d
+```
+
+**常用命令：**
+
+```bash
+# 查看容器状态
+docker compose -f docker-compose.debian-bookworm.yml ps
+
+# 查看容器日志
+docker compose -f docker-compose.debian-bookworm.yml logs -f
+
+# 停止并删除容器
+docker compose -f docker-compose.debian-bookworm.yml down
+
+# 进入容器
+docker exec -it debian-bookworm-systemd /bin/bash
 ```
 
 可用的 docker-compose 文件：
@@ -74,7 +92,14 @@ docker-compose -f docker-compose.ubuntu-focal.yml up -d
 如需同时运行多个版本的容器进行测试或开发：
 
 ```bash
-docker-compose -f docker-compose.multi.yml up -d
+# 后台运行所有容器
+docker compose -f docker-compose.multi.yml up -d
+
+# 查看所有容器状态
+docker compose -f docker-compose.multi.yml ps
+
+# 停止所有容器
+docker compose -f docker-compose.multi.yml down
 ```
 
 这将启动所有 5 个版本的容器，并通过不同的 SSH 端口访问：

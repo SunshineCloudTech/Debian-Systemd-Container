@@ -8,7 +8,7 @@
 
 services:
   debian-bookworm-systemd:
-    image: sunshinecloud007/systemd-container:debian-bookworm
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm
     container_name: debian-bookworm-systemd
     privileged: true
     restart: unless-stopped

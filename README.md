@@ -135,12 +135,12 @@ docker build -t ubuntu-noble-systemd -f ubuntu-noble/.devcontainer/Dockerfile .
 
 ```bash
 # AMD64 架构
-docker pull sunshinecloud007/systemd-container:debian-bookworm
-docker pull sunshinecloud007/systemd-container:ubuntu-noble
+docker pull sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm
+docker pull sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-noble
 
 # ARM64 架构
-docker pull sunshinecloud007/systemd-container:debian-bookworm-arm64
-docker pull sunshinecloud007/systemd-container:ubuntu-noble-arm64
+docker pull sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm
+docker pull sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-noble-arm64
 ```
 
 可用的镜像标签：
@@ -166,7 +166,7 @@ docker run --detach --privileged \
   --volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
   --cgroupns=host \
   --name my-systemd-container \
-  sunshinecloud007/systemd-container:debian-bookworm
+  sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm
 ```
 
 ### 进入容器

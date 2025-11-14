@@ -3,6 +3,10 @@ FROM buildpack-deps:${VARIANT}
 LABEL maintainer="SunshineCloudTech"
 ENV container="docker"
 ENV pip_packages="ansible"
+# Homebrew Environment Variables
+ENV PATH="/SunshineCloud/Homebrew/bin:${PATH}"
+ENV HOMEBREW_PREFIX="/SunshineCloud/Homebrew"
+ENV HOMEBREW_CACHE="/SunshineCloud/Homebrew/cache"
 USER root 
 # Update package list and install basic packages
 RUN apt-get update && apt-get upgrade -y && apt-get clean
@@ -49,6 +53,32 @@ RUN useradd -m "Administrator" -s /bin/bash && \
     mkdir -p /var/lib/ollama/models && \
     chown -R ollama:ollama /var/lib/ollama && \
     chmod -R 755 /var/lib/ollama
+
+# Create Directory Structure
+RUN mkdir -p /home/Administrator/Desktop /home/Administrator/Documents /home/Administrator/Downloads \
+    /home/Administrator/Music /home/Administrator/Pictures /home/Administrator/Public \
+    /home/Administrator/Templates /home/Administrator/thinclient_drives /home/Administrator/Videos && \
+    mkdir -p /home/matrix0523/Desktop /home/matrix0523/Documents /home/matrix0523/Downloads \
+    /home/matrix0523/Music /home/matrix0523/Pictures /home/matrix0523/Public \
+    /home/matrix0523/Templates /home/matrix0523/thinclient_drives /home/matrix0523/Videos && \
+    mkdir -p /app /SunshineCloud /lost+found && \
+    mkdir -p /DATA/AppData /DATA/Documents /DATA/Downloads /DATA/Gallery /DATA/Compressed \
+    /DATA/Desktop /DATA/Games /DATA/General /DATA/ISOS /DATA/Media /DATA/Others \
+    /DATA/Programs /DATA/Public /DATA/Templates /DATA/Tools /DATA/Torrents /DATA/Videos && \
+    mkdir -p /DATA/Media/Movies /DATA/Media/Music /DATA/Media/TV_Shows && \
+    mkdir -p /SunshineCloud/AppData /SunshineCloud/Documents /SunshineCloud/Downloads \
+    /SunshineCloud/Gallery /SunshineCloud/Compressed /SunshineCloud/Desktop \
+    /SunshineCloud/Games /SunshineCloud/General /SunshineCloud/ISOS /SunshineCloud/Media \
+    /SunshineCloud/Others /SunshineCloud/Programs /SunshineCloud/Public \
+    /SunshineCloud/Templates /SunshineCloud/Tools /SunshineCloud/Torrents /SunshineCloud/Videos && \
+    mkdir -p /SunshineCloud/Media/Movies /SunshineCloud/Media/Music /SunshineCloud/Media/TV_Shows && \
+    mkdir -p /media/appdata /media/documents /media/downloads /media/gallery /media/compressed \
+    /media/desktop /media/games /media/general /media/isos /media/media /media/others \
+    /media/programs /media/public /media/templates /media/tools /media/torrents /media/videos && \
+    mkdir -p /media/media/movies /media/media/music /media/media/tv_shows && \
+    mkdir -p /var/run/dbus && \
+    chown -R Administrator:Administrator /home/Administrator && \
+    chown -R matrix0523:matrix0523 /home/matrix0523
 # Install Ansible via Pip.
 RUN pip3 install $pip_packages
 # Disable requiretty.
@@ -58,6 +88,13 @@ RUN curl -fsSL https://ollama.com/install.sh | sh
 # Install Ansible inventory file.
 RUN mkdir -p /etc/ansible
 RUN echo '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
+
+# Install Homebrew
+RUN apt-get update && apt-get install -y git build-essential procps file && \
+    git clone https://github.com/Homebrew/brew /SunshineCloud/Homebrew && \
+    chown -R matrix0523:matrix0523 /SunshineCloud/Homebrew && \
+    echo 'eval "$(/SunshineCloud/Homebrew/bin/brew shellenv)"' >> /home/matrix0523/.bashrc && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]
 ENTRYPOINT [ "/lib/systemd/systemd" ]

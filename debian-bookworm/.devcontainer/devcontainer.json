@@ -64,7 +64,7 @@
         "ghcr.io/devcontainers/features/python:1": {
             "installPath": "/usr/local/python",   // Python 安装路径
             "installTools": true,                 // 安装开发工具（pip、setuptools）
-            "toolsToInstall": "pipx, uv",                // 额外工具列表
+            "toolsToInstall": "pipx, poetry, uv", // 额外工具列表
             "optimize": true,                     // 优化 Python 性能
             "enableShared": true,                 // 启用共享库
             "installJupyterlab": true,           // 安装 JupyterLab
@@ -129,6 +129,18 @@
             "version": "latest",                  // Rust 最新版本
             "profile": "minimal",                 // Rustup 安装配置（最小化）
             "components": "rust-analyzer,rust-src,rustfmt,clippy"  // Rust 组件
+        },
+
+        // Java：Java 开发环境（通过 SDKMAN!）
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "latest",                  // Java 最新版本
+            "jdkDistro": "tem",                    // JDK 发行版（Microsoft Build of OpenJDK）
+            "installGradle": true,                // 安装 Gradle 构建工具
+            "gradleVersion": "latest",            // Gradle 最新版本
+            "installMaven": true,                 // 安装 Maven 构建工具
+            "mavenVersion": "latest",             // Maven 最新版本
+            "installAnt": false,                  // 不安装 Ant
+            "installGroovy": false                // 不安装 Groovy
         },
                 
         // NVIDIA CUDA：GPU 计算和机器学习支持（已注释）

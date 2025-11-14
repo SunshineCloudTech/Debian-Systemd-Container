@@ -10,7 +10,7 @@
 services:
   # Debian 12 Bookworm
   debian-bookworm:
-    image: sunshinecloud007/systemd-container:debian-bookworm
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm
     container_name: debian-bookworm-systemd
     privileged: true
     restart: unless-stopped
@@ -25,7 +25,7 @@ services:
   
   # Debian 11 Bullseye
   debian-bullseye:
-    image: sunshinecloud007/systemd-container:debian-bullseye
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye
     container_name: debian-bullseye-systemd
     privileged: true
     restart: unless-stopped
@@ -40,7 +40,7 @@ services:
   
   # Ubuntu 24.04 Noble
   ubuntu-noble:
-    image: sunshinecloud007/systemd-container:ubuntu-noble
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-noble
     container_name: ubuntu-noble-systemd
     privileged: true
     restart: unless-stopped
@@ -55,7 +55,7 @@ services:
   
   # Ubuntu 22.04 Jammy
   ubuntu-jammy:
-    image: sunshinecloud007/systemd-container:ubuntu-jammy
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-jammy
     container_name: ubuntu-jammy-systemd
     privileged: true
     restart: unless-stopped
@@ -70,7 +70,7 @@ services:
   
   # Ubuntu 20.04 Focal
   ubuntu-focal:
-    image: sunshinecloud007/systemd-container:ubuntu-focal
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal
     container_name: ubuntu-focal-systemd
     privileged: true
     restart: unless-stopped

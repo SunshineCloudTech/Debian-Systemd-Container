@@ -8,7 +8,7 @@
 
 services:
   ubuntu-noble-systemd:
-    image: sunshinecloud007/systemd-container:ubuntu-noble
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-noble
     container_name: ubuntu-noble-systemd
     privileged: true
     restart: unless-stopped

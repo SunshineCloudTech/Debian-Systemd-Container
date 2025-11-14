@@ -8,7 +8,7 @@
 
 services:
   ubuntu-jammy-systemd:
-    image: sunshinecloud007/systemd-container:ubuntu-jammy
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-jammy
     container_name: ubuntu-jammy-systemd
     privileged: true
     restart: unless-stopped

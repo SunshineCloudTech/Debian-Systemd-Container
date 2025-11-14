@@ -8,7 +8,7 @@
 
 services:
   debian-bullseye-systemd:
-    image: sunshinecloud007/systemd-container:debian-bullseye
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye
     container_name: debian-bullseye-systemd
     privileged: true
     restart: unless-stopped

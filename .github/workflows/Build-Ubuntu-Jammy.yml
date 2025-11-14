@@ -93,12 +93,12 @@ jobs:
       #     file: ubuntu-jammy/Dockerfile
       #     platforms: linux/amd64,linux/arm64
       #     push: true
-      #     tags: sunshinecloud007/systemd-container:ubuntu-jammy-base
+      #     tags: sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-jammy-base
 
       - name: Build and push Dev Container image
         uses: devcontainers/ci@v0.3
         with:
-          imageName: sunshinecloud007/systemd-container
+          imageName: sunshinecloud007/sunshinecloud-systemd-devcontainer
           imageTag: ubuntu-jammy-base
           subFolder: ubuntu-jammy
           platform: linux/amd64,linux/arm64

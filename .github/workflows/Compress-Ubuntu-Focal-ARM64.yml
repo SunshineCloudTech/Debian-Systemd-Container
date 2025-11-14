@@ -53,13 +53,13 @@ jobs:
 
       - name: Pull Base Image (ARM64)
         run: |
-          docker pull sunshinecloud007/systemd-container:ubuntu-focal-base
-          docker images sunshinecloud007/systemd-container:ubuntu-focal-base
+          docker pull sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-base
+          docker images sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-base
           df -h
 
       - name: Compress Docker Image (ARM64)
         run: |
-          export src_image_name=sunshinecloud007/systemd-container:ubuntu-focal-base
+          export src_image_name=sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-base
           export docker_tmp_name=temp-focal-arm64
           echo "Creating temporary container from image..."
           docker create -it -P --name $docker_tmp_name $src_image_name
@@ -70,24 +70,24 @@ jobs:
           echo "Removing base image..."
           docker rmi $src_image_name
           echo "Importing tar to image..."
-          docker import $docker_tmp_name.tar sunshinecloud007/systemd-container:ubuntu-focal-temp-arm64
+          docker import $docker_tmp_name.tar sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-temp-arm64
           echo "Creating temporary container from imported image..."
-          docker create -it -P --name $docker_tmp_name sunshinecloud007/systemd-container:ubuntu-focal-temp-arm64 bash
+          docker create -it -P --name $docker_tmp_name sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-temp-arm64 bash
           echo "Committing container with metadata..."
           docker commit \
             --change='USER root' \
             --change='WORKDIR /root' \
             --change='VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]' \
             --change='ENTRYPOINT [ "/lib/systemd/systemd" ]' \
-            $docker_tmp_name sunshinecloud007/systemd-container:ubuntu-focal-arm64
+            $docker_tmp_name sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal
           rm $docker_tmp_name.tar
-          docker tag sunshinecloud007/systemd-container:ubuntu-focal-arm64 sunshinecloud007/systemd-container:ubuntu-focal-latest-arm64
-          docker images sunshinecloud007/systemd-container
+          docker tag sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-latest-arm64
+          docker images sunshinecloud007/sunshinecloud-systemd-devcontainer
 
       - name: Push Compressed Images (ARM64)
         run: |
-          docker push sunshinecloud007/systemd-container:ubuntu-focal-arm64
-          docker push sunshinecloud007/systemd-container:ubuntu-focal-latest-arm64
+          docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal
+          # docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-latest-arm64
 
       - name: Print Disk Usage
         run: |

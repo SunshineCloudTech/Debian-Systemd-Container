@@ -93,12 +93,12 @@ jobs:
       #     file: ubuntu-noble/Dockerfile
       #     platforms: linux/amd64,linux/arm64
       #     push: true
-      #     tags: sunshinecloud007/systemd-container:ubuntu-noble-base
+      #     tags: sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-noble-base
 
       - name: Build and push Dev Container image
         uses: devcontainers/ci@v0.3
         with:
-          imageName: sunshinecloud007/systemd-container
+          imageName: sunshinecloud007/sunshinecloud-systemd-devcontainer
           imageTag: ubuntu-noble-base
           subFolder: ubuntu-noble
           platform: linux/amd64,linux/arm64

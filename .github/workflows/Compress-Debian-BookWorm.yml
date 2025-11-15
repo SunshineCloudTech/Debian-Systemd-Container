@@ -79,15 +79,13 @@ jobs:
             --change='WORKDIR /root' \
             --change='VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]' \
             --change='ENTRYPOINT [ "/lib/systemd/systemd" ]' \
-            $docker_tmp_name sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm
+            $docker_tmp_name sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm-amd64-temp
           rm $docker_tmp_name.tar
-          docker tag sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm-latest
           docker images sunshinecloud007/sunshinecloud-systemd-devcontainer
 
       - name: Push Compressed Images
         run: |
-          docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm
-          # docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm-latest
+          docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm-amd64-temp
 
       - name: Print Disk Usage
         run: |

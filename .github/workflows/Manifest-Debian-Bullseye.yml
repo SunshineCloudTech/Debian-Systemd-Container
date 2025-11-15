@@ -1,0 +1,52 @@
+---
+name: Create Debian Bullseye Multi-arch Manifest
+
+on:
+  workflow_run:
+    workflows: ["Compress Debian Bullseye Image", "Compress Debian Bullseye ARM64 Image"]
+    types:
+      - completed
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  create-manifest:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Create and Push Multi-arch Manifest
+        run: |
+          # 创建 manifest list
+          docker buildx imagetools create -t sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye \
+            sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye-amd64-temp \
+            sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye-arm64-temp
+          
+          # 验证 manifest
+          docker buildx imagetools inspect sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye
+
+      - name: Create Latest Tag
+        run: |
+          docker buildx imagetools create -t sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye-latest \
+            sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye
+
+      - name: Cleanup Temporary Tags (Optional)
+        continue-on-error: true
+        run: |
+          echo "Temporary tags can be cleaned up manually if needed:"
+          echo "  - debian-bullseye-amd64-temp"
+          echo "  - debian-bullseye-arm64-temp"

@@ -79,15 +79,13 @@ jobs:
             --change='WORKDIR /root' \
             --change='VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]' \
             --change='ENTRYPOINT [ "/lib/systemd/systemd" ]' \
-            $docker_tmp_name sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye
+            $docker_tmp_name sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye-arm64-temp
           rm $docker_tmp_name.tar
-          docker tag sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye-latest-arm64
           docker images sunshinecloud007/sunshinecloud-systemd-devcontainer
 
       - name: Push Compressed Images (ARM64)
         run: |
-          docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye
-          # docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye-latest
+          docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye-arm64-temp
 
       - name: Print Disk Usage
         run: |

@@ -1,4 +1,4 @@
-ARG VARIANT="jammy"
+ARG VARIANT="noble"
 FROM buildpack-deps:${VARIANT}
 LABEL maintainer="SunshineCloudTech"
 ENV container="docker"
@@ -19,14 +19,14 @@ ENV FLATPAK_USER_DIR="/home/matrix0523/.local/share/flatpak"
 USER root 
 
 # 检测并修改 Debian/Ubuntu 镜像源
-# RUN if [ -f /etc/apt/sources.list ]; then \
-#         sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list; \
-#         echo "已修改 /etc/apt/sources.list"; \
-#     fi && \
-#     if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
-#         sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources; \
-#         echo "已修改 /etc/apt/sources.list.d/ubuntu.sources"; \
-#     fi
+RUN if [ -f /etc/apt/sources.list ]; then \
+        sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list; \
+        echo "已修改 /etc/apt/sources.list"; \
+    fi && \
+    if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
+        sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources; \
+        echo "已修改 /etc/apt/sources.list.d/ubuntu.sources"; \
+    fi
 
 # Update package list and install basic packages
 RUN apt-get update && apt-get upgrade -y && apt-get clean
@@ -133,9 +133,8 @@ RUN mkdir -p /home/Administrator/Desktop /home/Administrator/Documents /home/Adm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     plasma-desktop \
     plasma-workspace \
-    kde-plasma-desktop \
-    libkf5plasma5 \
-    kded5 && \
+    plasma-workspace-wayland \
+    kde-plasma-desktop && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -144,6 +143,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-desktop-portal-kde \
     polkit-kde-agent-1 \
     kde-cli-tools \
+    kde-cli-tools-data \
     plasma-integration \
     kwin-x11 \
     kwin-common \
@@ -162,6 +162,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # 文件管理和基础应用
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    kde-baseapps \
+    # kde-baseapps-bin \
     dolphin \
     konsole \
     kate \
@@ -195,13 +197,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 发现软件中心
 RUN apt-get update && apt-get install -y --no-install-recommends \
     plasma-discover \
-    plasma-discover-common && \
+    plasma-discover-common \
+    plasma-discover-backend-flatpak \
+    plasma-discover-backend-fwupd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # 主题和外观
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    breeze \
+    plasma-theme-oxygen \
+    kde-style-breeze \
+    # kde-style-breeze-qt5 \
+    # kde-style-breeze-data \
+    plasma-wallpapers-addons \
     plasma-workspace-wallpapers && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -209,6 +217,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 连接性
 RUN apt-get update && apt-get install -y --no-install-recommends \
     kdeconnect \
+    kdeconnect* \
     plasma-browser-integration && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -261,6 +270,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fcitx5-frontend-gtk3 \
     fcitx5-frontend-gtk4 \
     fcitx5-frontend-qt5 \
+    fcitx5-frontend-qt6 \
     fcitx5-module-cloudpinyin \
     fcitx5-module-xorg \
     fcitx5-config-qt \
@@ -360,7 +370,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
     zip \
-   unrar* \
+    unrar* \
     p7zip-full \
     flatpak \
     fonts-noto-cjk \
@@ -385,7 +395,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Ansible via Pip.
 RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
-RUN pip3 install $pip_packages
+RUN pip3 install --break-system-packages $pip_packages
 
 # Disable requiretty.
 RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers

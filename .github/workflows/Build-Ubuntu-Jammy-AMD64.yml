@@ -1,5 +1,5 @@
 ---
-name: Build Debian BookWorm
+name: Build Ubuntu Jammy AMD64
 
 on:
   workflow_dispatch:
@@ -25,17 +25,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3  
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Test building image.
-        run: docker build -t bookworm-systemd -f debian-bookworm/.devcontainer/Dockerfile .
+        run: docker build -t jammy-systemd -f ubuntu-jammy/.devcontainer/Dockerfile .
 
       - name: Run the built image.
         run: |
           docker run --name test-container -d --privileged \
             -v /sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns=host \
-            bookworm-systemd
+            jammy-systemd
 
       - name: Verify Ansible is accessible in the built image.
         run: docker exec --tty test-container env TERM=xterm ansible --version
@@ -71,9 +68,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3  
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -86,21 +80,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # - name: Build and push image.
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: ./
-      #     file: debian-bookworm/Dockerfile
-      #     platforms: linux/amd64,linux/arm64
-      #     push: true
-      #     tags: sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm-base
-
-      - name: Build and push Dev Container image
+      - name: Build and push Dev Container image (AMD64)
         uses: devcontainers/ci@v0.3
         with:
           imageName: sunshinecloud007/sunshinecloud-systemd-devcontainer
-          imageTag: debian-bookworm-base
-          subFolder: debian-bookworm
-          platform: linux/amd64,linux/arm64
+          imageTag: amd64-jammy-base
+          subFolder: ubuntu-jammy
+          platform: linux/amd64
           noCache: true
           push: always

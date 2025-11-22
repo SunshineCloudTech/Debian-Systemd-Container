@@ -1,4 +1,4 @@
-ARG VARIANT="jammy"
+ARG VARIANT="focal"
 FROM buildpack-deps:${VARIANT}
 LABEL maintainer="SunshineCloudTech"
 ENV container="docker"
@@ -19,14 +19,14 @@ ENV FLATPAK_USER_DIR="/home/matrix0523/.local/share/flatpak"
 USER root 
 
 # 检测并修改 Debian/Ubuntu 镜像源
-# RUN if [ -f /etc/apt/sources.list ]; then \
-#         sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list; \
-#         echo "已修改 /etc/apt/sources.list"; \
-#     fi && \
-#     if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
-#         sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources; \
-#         echo "已修改 /etc/apt/sources.list.d/ubuntu.sources"; \
-#     fi
+RUN if [ -f /etc/apt/sources.list ]; then \
+        sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list; \
+        echo "已修改 /etc/apt/sources.list"; \
+    fi && \
+    if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
+        sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources; \
+        echo "已修改 /etc/apt/sources.list.d/ubuntu.sources"; \
+    fi
 
 # Update package list and install basic packages
 RUN apt-get update && apt-get upgrade -y && apt-get clean
@@ -134,8 +134,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     plasma-desktop \
     plasma-workspace \
     kde-plasma-desktop \
-    libkf5plasma5 \
-    kded5 && \
+    libkf5plasma5 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -174,11 +173,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # 系统设置
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    plasma-systemmonitor \
-    plasma-disks \
+    # plasma-systemmonitor \
+    # plasma-disks \
     kde-config-gtk-style \
-    kde-config-systemd \
-    kde-config-screenlocker \
     systemsettings && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -186,16 +183,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 通知和界面
 RUN apt-get update && apt-get install -y --no-install-recommends \
     plasma-widgets-addons \
-    plasma-desktop-data \
-    plasma-workspace-data \
-    kdeplasma-addons-data && \
+    plasma-desktop-data && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # 发现软件中心
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    plasma-discover \
-    plasma-discover-common && \
+    plasma-discover && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -251,29 +245,27 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # ============================================
-# 中文输入法 (Fcitx5)
+# 中文输入法 (Fcitx - Ubuntu 20.04 使用 Fcitx 而非 Fcitx5)
 # ============================================
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    fcitx5 \
-    fcitx5-chinese-addons \
-    fcitx5-frontend-gtk2 \
-    fcitx5-frontend-gtk3 \
-    fcitx5-frontend-gtk4 \
-    fcitx5-frontend-qt5 \
-    fcitx5-module-cloudpinyin \
-    fcitx5-module-xorg \
-    fcitx5-config-qt \
-    kde-config-fcitx5 && \
+    fcitx \
+    fcitx-googlepinyin \
+    fcitx-sunpinyin \
+    fcitx-module-cloudpinyin \
+    fcitx-frontend-gtk2 \
+    fcitx-frontend-gtk3 \
+    fcitx-frontend-qt5 \
+    fcitx-ui-classic \
+    kde-config-fcitx && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 配置 Fcitx5 环境变量
+# 配置 Fcitx 环境变量
 RUN echo 'export GTK_IM_MODULE=fcitx' >> /etc/environment && \
     echo 'export QT_IM_MODULE=fcitx' >> /etc/environment && \
     echo 'export XMODIFIERS=@im=fcitx' >> /etc/environment && \
-    echo 'export SDL_IM_MODULE=fcitx' >> /etc/environment && \
-    echo 'export GLFW_IM_MODULE=ibus' >> /etc/environment
+    echo 'export SDL_IM_MODULE=fcitx' >> /etc/environment
 
 # ============================================
 # XRDP 远程桌面支持

@@ -1,5 +1,5 @@
 ---
-name: Build Debian Bullseye
+name: Build Ubuntu Focal ARM64
 
 on:
   workflow_dispatch:
@@ -8,13 +8,13 @@ on:
     branches:
       - master
   schedule:
-    - cron: "35 2 * * 1"
+    - cron: "25 2 * * 1"
 
 jobs:
   # Test the image builds and works correctly.
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@v4
@@ -25,17 +25,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3  
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Test building image.
-        run: docker build -t bullseye-systemd -f debian-bullseye/.devcontainer/Dockerfile .
+        run: docker build -t focal-systemd -f ubuntu-focal/.devcontainer/Dockerfile .
 
       - name: Run the built image.
         run: |
           docker run --name test-container -d --privileged \
             -v /sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns=host \
-            bullseye-systemd
+            focal-systemd
 
       - name: Verify Ansible is accessible in the built image.
         run: docker exec --tty test-container env TERM=xterm ansible --version
@@ -43,7 +40,7 @@ jobs:
   # If on master branch, build and release image.
   release:
     name: Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     needs: test
     if: github.ref == 'refs/heads/master'
 
@@ -71,9 +68,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3  
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -86,21 +80,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # - name: Build and push image.
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: ./
-      #     file: debian-bullseye/Dockerfile
-      #     platforms: linux/amd64,linux/arm64
-      #     push: true
-      #     tags: sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bullseye-base
-
-      - name: Build and push Dev Container image
+      - name: Build and push Dev Container image (ARM64)
         uses: devcontainers/ci@v0.3
         with:
           imageName: sunshinecloud007/sunshinecloud-systemd-devcontainer
-          imageTag: debian-bullseye-base
-          subFolder: debian-bullseye
-          platform: linux/amd64,linux/arm64
+          imageTag: arm64-focal-base
+          subFolder: ubuntu-focal
+          platform: linux/arm64
           noCache: true
           push: always

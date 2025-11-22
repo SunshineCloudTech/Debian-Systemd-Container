@@ -3,7 +3,7 @@ name: Compress Ubuntu Focal Image
 
 on:
   workflow_run:
-    workflows: ["Build Ubuntu Focal"]
+    workflows: ["Build Ubuntu Focal AMD64"]
     types:
       - completed
     branches:
@@ -53,13 +53,13 @@ jobs:
 
       - name: Pull Base Image
         run: |
-          docker pull sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-base
-          docker images sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-base
+          docker pull sunshinecloud007/sunshinecloud-systemd-devcontainer:amd64-focal-base
+          docker images sunshinecloud007/sunshinecloud-systemd-devcontainer:amd64-focal-base
           df -h
 
       - name: Compress Docker Image
         run: |
-          export src_image_name=sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-base
+          export src_image_name=sunshinecloud007/sunshinecloud-systemd-devcontainer:amd64-focal-base
           export docker_tmp_name=temp-focal
           echo "Creating temporary container from image..."
           docker create -it -P --name $docker_tmp_name $src_image_name
@@ -79,13 +79,13 @@ jobs:
             --change='WORKDIR /root' \
             --change='VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]' \
             --change='ENTRYPOINT [ "/lib/systemd/systemd" ]' \
-            $docker_tmp_name sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-amd64-temp
+            $docker_tmp_name sunshinecloud007/sunshinecloud-systemd-devcontainer:amd64-focal
           rm $docker_tmp_name.tar
           docker images sunshinecloud007/sunshinecloud-systemd-devcontainer
 
       - name: Push Compressed Images
         run: |
-          docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:ubuntu-focal-amd64-temp
+          docker push sunshinecloud007/sunshinecloud-systemd-devcontainer:amd64-focal
 
       - name: Print Disk Usage
         run: |

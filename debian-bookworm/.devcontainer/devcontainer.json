@@ -61,16 +61,16 @@
         },
 
         // Python 开发环境：数据科学和 Web 开发支持
-        "ghcr.io/devcontainers/features/python:1": {
-            "installPath": "/usr/local/python",   // Python 安装路径
-            "installTools": true,                 // 安装开发工具（pip、setuptools）
-            "toolsToInstall": "pipx, poetry, uv", // 额外工具列表
-            "optimize": true,                     // 优化 Python 性能
-            "enableShared": true,                 // 启用共享库
-            "installJupyterlab": true,           // 安装 JupyterLab
-            "configureJupyterlabAllowOrigin": "0.0.0.0", // JupyterLab 允许的来源
-            "version": "3.10"                    // Python 版本
-        },
+        // "ghcr.io/devcontainers/features/python:1": {
+        //     "installPath": "/usr/local/python",   // Python 安装路径
+        //     "installTools": true,                 // 安装开发工具（pip、setuptools）
+        //     "toolsToInstall": "pipx, poetry, uv", // 额外工具列表
+        //     "optimize": true,                     // 优化 Python 性能
+        //     "enableShared": true,                 // 启用共享库
+        //     "installJupyterlab": true,           // 安装 JupyterLab
+        //     "configureJupyterlabAllowOrigin": "0.0.0.0", // JupyterLab 允许的来源
+        //     "version": "3.10"                    // Python 版本
+        // },
         
         // Conda 包管理器：Python 科学计算环境管理（已注释）
         // "ghcr.io/devcontainers/features/conda:1": {
@@ -127,7 +127,7 @@
         // Rust：Rust 语言开发环境
         "ghcr.io/devcontainers/features/rust:1": {
             "version": "latest",                  // Rust 最新版本
-            "profile": "minimal",                 // Rustup 安装配置（最小化）
+            "profile": "complete",                 // Rustup 安装配置（最小化）
             "components": "rust-analyzer,rust-src,rustfmt,clippy"  // Rust 组件
         },
 
@@ -182,8 +182,8 @@
         "./features/nvs",                                   // Node 版本切换器
         "ghcr.io/devcontainers/features/conda",            // Conda 包管理器
         "./features/patch-conda",                           // Conda 环境修补
-        "ghcr.io/devcontainers/features/python",           // Python 环境
-        "./features/patch-python",                          // Python 环境修补
+        // "ghcr.io/devcontainers/features/python",           // Python 环境
+        // "./features/patch-python",                          // Python 环境修补
         "./features/machine-learning-packages",             // 机器学习包
         "./features/micromamba",                           // Micromamba 包管理器
         "ghcr.io/devcontainers/features/powershell",       // PowerShell

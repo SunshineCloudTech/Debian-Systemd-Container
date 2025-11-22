@@ -1,4 +1,4 @@
-ARG VARIANT="jammy"
+ARG VARIANT="bullseye"
 FROM buildpack-deps:${VARIANT}
 LABEL maintainer="SunshineCloudTech"
 ENV container="docker"
@@ -19,14 +19,14 @@ ENV FLATPAK_USER_DIR="/home/matrix0523/.local/share/flatpak"
 USER root 
 
 # 检测并修改 Debian/Ubuntu 镜像源
-# RUN if [ -f /etc/apt/sources.list ]; then \
-#         sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list; \
-#         echo "已修改 /etc/apt/sources.list"; \
-#     fi && \
-#     if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
-#         sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources; \
-#         echo "已修改 /etc/apt/sources.list.d/ubuntu.sources"; \
-#     fi
+RUN if [ -f /etc/apt/sources.list ]; then \
+        sed -i 's|deb.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list; \
+        echo "已修改 /etc/apt/sources.list"; \
+    fi && \
+    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+        sed -i 's|deb.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/debian.sources; \
+        echo "已修改 /etc/apt/sources.list.d/debian.sources"; \
+    fi
 
 # Update package list and install basic packages
 RUN apt-get update && apt-get upgrade -y && apt-get clean
@@ -243,10 +243,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 浏览器
 # ============================================
 
-# Firefox
+# Firefox ESR
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    firefox \
-    firefox-locale-zh-hans && \
+    firefox-esr \
+    firefox-esr-l10n-zh-cn && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -259,7 +259,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fcitx5-chinese-addons \
     fcitx5-frontend-gtk2 \
     fcitx5-frontend-gtk3 \
-    fcitx5-frontend-gtk4 \
     fcitx5-frontend-qt5 \
     fcitx5-module-cloudpinyin \
     fcitx5-module-xorg \

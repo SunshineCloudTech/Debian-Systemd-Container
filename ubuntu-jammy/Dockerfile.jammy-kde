@@ -19,14 +19,14 @@ ENV FLATPAK_USER_DIR="/home/matrix0523/.local/share/flatpak"
 USER root 
 
 # 检测并修改 Debian/Ubuntu 镜像源
-# RUN if [ -f /etc/apt/sources.list ]; then \
-#         sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list; \
-#         echo "已修改 /etc/apt/sources.list"; \
-#     fi && \
-#     if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
-#         sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources; \
-#         echo "已修改 /etc/apt/sources.list.d/ubuntu.sources"; \
-#     fi
+RUN if [ -f /etc/apt/sources.list ]; then \
+        sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list; \
+        echo "已修改 /etc/apt/sources.list"; \
+    fi && \
+    if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
+        sed -i 's|archive.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources; \
+        echo "已修改 /etc/apt/sources.list.d/ubuntu.sources"; \
+    fi
 
 # Update package list and install basic packages
 RUN apt-get update && apt-get upgrade -y && apt-get clean

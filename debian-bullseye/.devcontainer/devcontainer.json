@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/java
 {
-	"name": "Debian-Systemd-Container",
+	"name": "Debian-Bullseye-Systemd-Devcontainer",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	// "image": "sunshinecloud007/base-bookworm:lite",
 	// Use 'dockerComposeFile' to specify a Docker Compose file. More info: https://aka.ms/devcontainers-docker-compose
@@ -155,9 +155,9 @@
         
         // 自定义功能特性（本地开发）
         "./features/nvs": "latest",              // Node Version Switcher
-        "./features/machine-learning-packages": "latest", // 机器学习包集合
-        "./features/setup-user": "latest",       // 用户环境配置
-        "./features/patch-python": {},           // Python 环境修补
+        // "./features/machine-learning-packages": "latest", // 机器学习包集合（已注释）
+        // "./features/setup-user": "latest",       // 用户环境配置（已注释）
+        // "./features/patch-python": {},           // Python 环境修补（已注释）
         // "./features/patch-conda": {},            // Conda 环境修补（已注释）
 		"./features/micromamba": {
 			"allowReinstall": true,
@@ -177,14 +177,14 @@
     "overrideFeatureInstallOrder": [
         "ghcr.io/devcontainers/features/common-utils",     // 基础系统工具
         "ghcr.io/devcontainers/features/git",              // Git 版本控制
-        "ghcr.io/devcontainers/features/nvidia-cuda",      // NVIDIA CUDA 支持
+        // "ghcr.io/devcontainers/features/nvidia-cuda",      // NVIDIA CUDA 支持
         "ghcr.io/devcontainers/features/node",             // Node.js 环境
         "./features/nvs",                                   // Node 版本切换器
-        "ghcr.io/devcontainers/features/conda",            // Conda 包管理器
-        "./features/patch-conda",                           // Conda 环境修补
+        // "ghcr.io/devcontainers/features/conda",            // Conda 包管理器
+        // "./features/patch-conda",                           // Conda 环境修补
         // "ghcr.io/devcontainers/features/python",           // Python 环境
         // "./features/patch-python",                          // Python 环境修补
-        "./features/machine-learning-packages",             // 机器学习包
+        // "./features/machine-learning-packages",             // 机器学习包
         "./features/micromamba",                           // Micromamba 包管理器
         "ghcr.io/devcontainers/features/powershell",       // PowerShell
         "ghcr.io/devcontainers/features/go",               // Go 语言
@@ -192,8 +192,8 @@
         "ghcr.io/devcontainers/features/sshd",             // SSH 服务器
         "ghcr.io/devcontainers/features/git-lfs",          // Git LFS
         "ghcr.io/devcontainers/features/github-cli",       // GitHub CLI
-        "ghcr.io/devcontainers/features/docker-in-docker", // Docker 支持
-        "./features/setup-user"                            // 用户环境配置（最后执行）
+        "ghcr.io/devcontainers/features/docker-in-docker" // Docker 支持
+        // "./features/setup-user"                            // 用户环境配置（最后执行）
     ],
     
     // 容器用户配置

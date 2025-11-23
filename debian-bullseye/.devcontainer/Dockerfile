@@ -382,8 +382,35 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Build and install PulseAudio xRDP module
+WORKDIR /tmp
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    doxygen \
+    lsb-release \
+    build-essential \
+    cmake \
+    m4 \
+    git \
+    libpulse* \
+    sudo \
+    curl \
+    wget \
+    coreutils && \
+    git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp && \
+    cd pulseaudio-module-xrdp && \
+    bash scripts/install_pulseaudio_sources_apt.sh && \
+    ./bootstrap && \
+    ./configure PULSE_DIR=$HOME/pulseaudio.src && \
+    make -j"$(nproc)" install && \
+    cd / && \
+    rm -rf /tmp/pulseaudio-module-xrdp && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /
+
 # Install Ansible via Pip.
-RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+# RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 RUN pip3 install $pip_packages
 
 # Disable requiretty.
@@ -397,9 +424,9 @@ RUN mkdir -vp /etc/ansible
 RUN echo '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
 
 # 创建 KDE 用户
-RUN useradd -m -s /bin/bash -G sudo,audio,video kdeuser && \
-    echo "kdeuser:kdeuser" | chpasswd && \
-    echo "kdeuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+RUN useradd -m -s /bin/bash -G sudo,audio,video matrix0523 && \
+    echo "matrix0523:matrix0523" | chpasswd && \
+    echo "matrix0523 ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     usermod -aG audio,video Administrator && \
     usermod -aG audio,video matrix0523
 

@@ -431,7 +431,7 @@ RUN mkdir -vp /etc/ansible
 RUN echo '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
 
 # 创建 KDE 用户
-RUN useradd -m -s /bin/bash -G sudo,audio,video matrix0523 && \
+RUN useradd -m -s /bin/bash -G sudo,audio,video docker && \
     echo "matrix0523:matrix0523" | chpasswd && \
     echo "matrix0523 ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     usermod -aG audio,video Administrator && \

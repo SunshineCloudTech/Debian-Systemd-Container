@@ -419,9 +419,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /
 RUN sudo apt update && sudo apt install software-proper* -y
-RUN sudo add-apt-repository ppa:xtradeb/apps
-RUN sudo apt update
-RUN sudo apt install chromium -y
+# RUN sudo add-apt-repository ppa:xtradeb/apps
+# RUN sudo apt update
+# RUN sudo apt install chromium -y
 # Install Ansible via Pip.
 # RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 RUN pip3 install --break-system-packages $pip_packages

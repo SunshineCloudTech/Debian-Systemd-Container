@@ -89,3 +89,6 @@ jobs:
           platform: linux/amd64
           noCache: true
           push: always
+
+      - name: Check Disk Space
+        run: df -alh

@@ -90,3 +90,6 @@ jobs:
       - name: Print Disk Usage
         run: |
           df -h
+
+      - name: Check Disk Space
+        run: df -alh

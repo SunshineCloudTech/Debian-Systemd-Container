@@ -165,7 +165,12 @@
 			"version": "latest",
 			"channels": "conda-forge",
 			"packages": "python>=3.10,<3.11 uv pip"
-		}
+		},
+        
+        // Ollama：本地 AI 模型运行环境
+        "./features/ollama": {
+            "pull": "qwen3"                           // 需要预拉取的模型列表（逗号分隔）
+        }
     },
     /*
      * 功能安装顺序控制
@@ -192,7 +197,8 @@
         "ghcr.io/devcontainers/features/sshd",             // SSH 服务器
         "ghcr.io/devcontainers/features/git-lfs",          // Git LFS
         "ghcr.io/devcontainers/features/github-cli",       // GitHub CLI
-        "ghcr.io/devcontainers/features/docker-in-docker" // Docker 支持
+        "ghcr.io/devcontainers/features/docker-in-docker", // Docker 支持
+        "./features/ollama"                                // Ollama AI 模型运行环境
         // "./features/setup-user"                            // 用户环境配置（最后执行）
     ],
     

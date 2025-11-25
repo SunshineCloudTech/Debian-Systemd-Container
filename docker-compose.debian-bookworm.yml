@@ -8,16 +8,19 @@
 
 services:
   debian-bookworm-systemd:
-    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:debian-bookworm
+    image: sunshinecloud007/sunshinecloud-systemd-devcontainer:amd64-bookworm
     container_name: debian-bookworm-systemd
     privileged: true
     restart: unless-stopped
+    network_mode: host
+    stdin_open: true
+    tty: true
     
     # 必需的 systemd 配置
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     
-    # 使用主机的 cgroup namespace (需要 Docker Compose v2.1+)
+    # 使用主机的 cgroup namespace
     cgroup: host
     
     # 可选：持久化数据卷

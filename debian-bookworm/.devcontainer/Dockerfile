@@ -415,7 +415,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
-
+RUN apt update && apt install chromium-driver chromium-l10n chromium-common -y
 # Install Ansible via Pip.
 # RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 RUN pip3 install --break-system-packages $pip_packages
@@ -450,6 +450,66 @@ RUN apt-get autoremove -y && \
            /tmp/* \
            /var/tmp/* \
            /var/cache/apt/archives/*
+
+# Configure MOTD and bash settings
+RUN echo "███████╗██╗   ██╗███╗   ██╗███████╗██╗  ██╗██╗███╗   ██╗███████╗ ██████╗██╗      ██████╗ ██╗   ██╗██████╗ " > /etc/motd && \
+    echo "██╔════╝██║   ██║████╗  ██║██╔════╝██║  ██║██║████╗  ██║██╔════╝██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗" >> /etc/motd && \
+    echo "███████╗██║   ██║██╔██╗ ██║███████╗███████║██║██╔██╗ ██║█████╗  ██║     ██║     ██║   ██║██║   ██║██║  ██║" >> /etc/motd && \
+    echo "╚════██║██║   ██║██║╚██╗██║╚════██║██╔══██║██║██║╚██╗██║██╔══╝  ██║     ██║     ██║   ██║██║   ██║██║  ██║" >> /etc/motd && \
+    echo "███████║╚██████╔╝██║ ╚████║███████║██║  ██║██║██║ ╚████║███████╗╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝" >> /etc/motd && \
+    echo "╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝ " >> /etc/motd && \
+    echo "                                                                                                          " >> /etc/motd && \
+    echo "if [ -t 1 ]; then" >> /etc/bash.bashrc && \
+    echo "  if command -v run-parts >/dev/null 2>&1 && [ -d /etc/update-motd.d ]; then" >> /etc/bash.bashrc && \
+    echo "    run-parts /etc/update-motd.d > /tmp/_motd" >> /etc/bash.bashrc && \
+    echo "    cat /etc/motd" >> /etc/bash.bashrc && \
+    echo "    cat /tmp/_motd" >> /etc/bash.bashrc && \
+    echo "    rm -f /tmp/_motd" >> /etc/bash.bashrc && \
+    echo "  else" >> /etc/bash.bashrc && \
+    echo "    cat /etc/motd" >> /etc/bash.bashrc && \
+    echo "  fi" >> /etc/bash.bashrc && \
+    echo "fi" >> /etc/bash.bashrc && \
+    # Create welcome message for MOTD
+    echo '#!/bin/sh' > /etc/update-motd.d/10-uname && \
+    echo 'echo "👋 Welcome to SunshineCloud Codespaces! You are on our default image."' >> /etc/update-motd.d/10-uname && \
+    echo 'echo "   - It includes runtimes and tools for Python, Node.js, Docker, and more. See the full list here: https://aka.ms/ghcs-default-image"' >> /etc/update-motd.d/10-uname && \
+    echo 'echo "   - Want to use a custom image instead? Learn more here: https://aka.ms/configure-codespace"' >> /etc/update-motd.d/10-uname && \
+    echo 'echo ""' >> /etc/update-motd.d/10-uname && \
+    echo 'echo "🔍 To explore VS Code to its fullest, search using the Command Palette (Cmd/Ctrl + Shift + P or F1)."' >> /etc/update-motd.d/10-uname && \
+    echo 'echo ""' >> /etc/update-motd.d/10-uname && \
+    echo 'echo "📝 Edit away, run your app as usual, and we'"'"'ll automatically make it available for you to access."' >> /etc/update-motd.d/10-uname && \
+    echo 'echo ""' >> /etc/update-motd.d/10-uname && \
+    chmod +x /etc/update-motd.d/10-uname
+
+# Install Homebrew
+RUN mkdir -vp /SunshineCloud/Homebrew/ && \
+    git clone --depth=1 https://github.com/Homebrew/brew /SunshineCloud/Homebrew && \
+    chown -R matrix0523:matrix0523 /SunshineCloud/Homebrew && \
+    echo 'export PATH="/SunshineCloud/Homebrew/bin:$PATH"' >> /home/matrix0523/.bashrc
+
+# Install Visual Studio Code
+RUN echo "Installing Visual Studio Code..." && \
+    # Install dependencies
+    apt-get update && \
+    apt-get install -y wget gpg apt-transport-https && \
+    # Add Microsoft GPG key and repository
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/microsoft.gpg && \
+    install -D -o root -g root -m 644 /tmp/microsoft.gpg /usr/share/keyrings/microsoft.gpg && \
+    rm -f /tmp/microsoft.gpg && \
+    # Create VS Code repository configuration
+    echo "Types: deb" > /etc/apt/sources.list.d/vscode.sources && \
+    echo "URIs: https://packages.microsoft.com/repos/code" >> /etc/apt/sources.list.d/vscode.sources && \
+    echo "Suites: stable" >> /etc/apt/sources.list.d/vscode.sources && \
+    echo "Components: main" >> /etc/apt/sources.list.d/vscode.sources && \
+    echo "Architectures: amd64,arm64,armhf" >> /etc/apt/sources.list.d/vscode.sources && \
+    echo "Signed-By: /usr/share/keyrings/microsoft.gpg" >> /etc/apt/sources.list.d/vscode.sources && \
+    # Update package cache and install VS Code
+    apt-get update && \
+    apt-get install -y code && \
+    # Clean up
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    echo "Visual Studio Code installation completed"
 
 # 暴露 XRDP 端口
 EXPOSE 3389

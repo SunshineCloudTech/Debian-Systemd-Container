@@ -29,7 +29,7 @@ echo "步骤 1/5: 更新系统包列表..."
 sudo apt-get update
 
 echo "步骤 2/5: 安装必要的依赖包..."
-sudo apt-get install -y \
+sudo apt-get install -y --no-install-recommends \
     curl \
     wget \
     ca-certificates \
@@ -59,7 +59,7 @@ echo "正在添加 NodeSource 仓库..."
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
 
 echo "正在安装 Node.js..."
-sudo apt-get install -y nodejs
+sudo apt-get install -y --no-install-recommends nodejs
 
 echo "验证 Node.js 和 npm 安装..."
 node_version=$(node --version)

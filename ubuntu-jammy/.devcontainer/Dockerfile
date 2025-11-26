@@ -56,7 +56,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 
 # Enable systemd.
 RUN apt-get update && \
-    apt-get install -y systemd systemd-sysv && \
+    apt-get install -y --no-install-recommends systemd systemd-sysv && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
@@ -70,7 +70,7 @@ RUN apt-get update && \
 
 # Install pip and other requirements.
 RUN apt-get update \
-  && apt-get install -y \
+  && apt-get install -y --no-install-recommends \
     python3-pip \
     sudo xterm \
     curl wget \
@@ -487,7 +487,7 @@ RUN mkdir -vp /SunshineCloud/Homebrew/ && \
 RUN echo "Installing Visual Studio Code..." && \
     # Install dependencies
     apt-get update && \
-    apt-get install -y wget gpg apt-transport-https && \
+    apt-get install -y --no-install-recommends wget gpg apt-transport-https && \
     # Add Microsoft GPG key and repository
     wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/microsoft.gpg && \
     install -D -o root -g root -m 644 /tmp/microsoft.gpg /usr/share/keyrings/microsoft.gpg && \
@@ -501,7 +501,7 @@ RUN echo "Installing Visual Studio Code..." && \
     echo "Signed-By: /usr/share/keyrings/microsoft.gpg" >> /etc/apt/sources.list.d/vscode.sources && \
     # Update package cache and install VS Code
     apt-get update && \
-    apt-get install -y code && \
+    apt-get install -y --no-install-recommends code && \
     # Clean up
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \

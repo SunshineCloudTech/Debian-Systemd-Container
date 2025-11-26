@@ -327,15 +327,20 @@ RUN echo '#!/bin/sh' > /etc/xrdp/startwm.sh && \
 # X11 和显示服务器
 # ============================================
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    xorg \
-    x11-xserver-utils \
-    x11-utils \
-    x11-apps \
-    dbus-x11 \
-    mesa-utils && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN for i in 1 2 3; do \
+        apt-get update && \
+        apt-get install -y --no-install-recommends \
+            xorg \
+            x11-xserver-utils \
+            x11-utils \
+            x11-apps \
+            dbus-x11 \
+            mesa-utils && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/* && \
+        break || \
+        (echo "Retry $i failed, waiting..." && sleep 5); \
+    done
 
 # ============================================
 # 额外实用工具
